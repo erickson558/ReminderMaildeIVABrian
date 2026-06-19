@@ -1,0 +1,15 @@
+{
+    "destinatarios": [
+        "osorio.albert@claro.com.gt",
+        "erickson007@gmail.com",
+        "systemsolutionie@gmail.com",
+        "erickson558@outlook.com"
+    ],
+    "asunto": "Reminder de Formulario IVA  Brian del 10 al 15 de cada mes",
+    "cuerpo": "Recordatorio de 10 al 15 del presente mes ver lo siguiente:\n\n- Ver si ya la contadora ha entregado el formulario del ISR, si no pédirselo.\n\n- Pagar el Formulario del ISR máximo 3 días después que nos lo entregue la contadora.\n\n- Esperar adicionalmente el formulario del IVA, si no lo ha entregado pédirselo\n\n- Validar que los datos estén correctos en ambos formularios.\n\n- Al confirmar y recibir el formulario del IVA, hay que pagarle a la cuenta de BI Ahorro 4210594 Q500.",
+    "auto_close": true,
+    "auto_close_delay": 60,
+    "smtp_password": "",
+    "language": "es",
+    "selected_account": ""
+}

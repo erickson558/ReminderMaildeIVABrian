@@ -1,0 +1,23 @@
+# Build artifacts
+build/
+dist/
+*.exe
+*.spec.bak
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Logs
+reminder.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
