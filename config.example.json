@@ -1,0 +1,13 @@
+{
+    "destinatarios": [
+        "ejemplo@correo.com",
+        "otro@correo.com"
+    ],
+    "asunto": "Reminder de Formulario IVA del 10 al 15 de cada mes",
+    "cuerpo": "Recordatorio de 10 al 15 del presente mes:\n\n- Verificar formulario ISR con la contadora.\n- Pagar ISR máximo 3 días después de recibirlo.\n- Verificar y pagar formulario IVA.\n\n(Personaliza este cuerpo según tus necesidades)",
+    "auto_close": true,
+    "auto_close_delay": 60,
+    "smtp_password": "",
+    "language": "es",
+    "selected_account": ""
+}

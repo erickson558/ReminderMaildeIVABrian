@@ -1,3 +1,6 @@
+# Configuración local con datos sensibles (correos, contraseñas)
+config.json
+
 # Build artifacts
 build/
 dist/
