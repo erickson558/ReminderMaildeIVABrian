@@ -24,7 +24,6 @@
     "status_select_to_remove": "Select a recipient to remove.",
     "status_recipient_removed": "Recipient(s) removed.",
     "status_config_saved": "Configuration saved.",
-    "status_config_reloaded": "Recipients were reloaded from config.json.",
     "status_config_error": "Save error: {error}",
     "status_no_recipients": "Add at least one recipient.",
     "status_no_account": "Select a sending account.",
