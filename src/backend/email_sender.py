@@ -95,16 +95,19 @@ def send_via_outlook_com(
                 "Agrégala en Archivo → Configuración de la cuenta."
             )
 
-        # Excluir al remitente de los destinatarios para evitar auto-envío
-        filtered = [r for r in recipients if r.lower() != account_smtp.lower()]
-        if not filtered:
+        normalized_recipients = [r.strip() for r in recipients if r and r.strip()]
+        if not normalized_recipients:
             raise EmailSendError(
-                "No quedan destinatarios válidos después de filtrar la cuenta remitente."
+                "No hay destinatarios válidos para enviar el correo."
             )
 
-        mail.To = "; ".join(filtered)
+        mail.To = "; ".join(normalized_recipients)
         mail.Send()
-        logger.info("Correo enviado via Outlook COM desde %s a %s", account_smtp, filtered)
+        logger.info(
+            "Correo enviado via Outlook COM desde %s a %s",
+            account_smtp,
+            normalized_recipients,
+        )
 
     except EmailSendError:
         raise  # Re-lanzar sin envolver

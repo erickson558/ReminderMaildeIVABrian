@@ -56,7 +56,7 @@ src/
 - **Hotmail / Outlook.com / Gmail / Yahoo:** SMTP directo, puerto 587, STARTTLS.
 - **Detección automática:** basada en el dominio de la cuenta seleccionada.
 - **Placeholders en cuerpo:** `[Mes en letras]` → mes en español; `[año en numero]` → año.
-- **Filtrado:** el remitente se excluye automáticamente de la lista de destinatarios.
+- **Destinatarios:** si el remitente también está en la lista, se conserva y recibe el correo.
 
 ### 4.2 Interfaz de usuario
 
@@ -129,5 +129,6 @@ El .exe resultante:
 
 | Fecha | Cambio |
 |---|---|
+| 2026-06-20 | Fix Outlook COM: ya no se elimina de `To` al destinatario que coincide con la cuenta remitente, por lo que también recibe el correo si está en la lista. |
 | 2026-06-20 | Fix de destinatarios: agregar y eliminar actualiza el estado actual de la GUI, y el envío usa siempre esa lista visible, normalizando correos duplicados o con espacios. |
 | 2026-06-19 | Refactor completo: separación frontend/backend, fix Hotmail (SMTP), i18n, threading, botón donación, SDD, agents/skills |
