@@ -24,6 +24,7 @@
     "status_select_to_remove": "Seleccione un destinatario para eliminar.",
     "status_recipient_removed": "Destinatario(s) eliminado(s).",
     "status_config_saved": "Configuración guardada.",
+    "status_config_reloaded": "Se recargaron los destinatarios desde config.json.",
     "status_config_error": "Error al guardar: {error}",
     "status_no_recipients": "Agregue al menos un destinatario.",
     "status_no_account": "Seleccione una cuenta de envío.",

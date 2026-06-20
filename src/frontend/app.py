@@ -15,6 +15,7 @@ Flujo de envío:
 """
 
 import logging
+import os
 import threading
 import tkinter as tk
 import webbrowser
@@ -26,7 +27,7 @@ from src.backend.account_manager import (
     get_smtp_config,
     is_personal_account,
 )
-from src.backend.config_manager import load_config, save_config
+from src.backend.config_manager import get_config_path, load_config, save_config
 from src.backend.email_sender import (
     EmailSendError,
     replace_placeholders,
@@ -43,6 +44,25 @@ WINDOW_MIN_W = 520
 WINDOW_MIN_H = 650
 
 
+def _normalize_recipients(emails) -> list[str]:
+    """Limpia espacios y elimina destinatarios vacíos o duplicados."""
+    normalized = []
+    seen = set()
+    for raw_email in emails:
+        email = str(raw_email).strip()
+        if not email:
+            continue
+
+        email_key = email.lower()
+        if email_key in seen:
+            continue
+
+        seen.add(email_key)
+        normalized.append(email)
+
+    return normalized
+
+
 class ReminderApp:
     """
     Clase principal de la aplicación.
@@ -56,6 +76,7 @@ class ReminderApp:
         """
         # Cargar configuración persistida (config.json)
         self.config = load_config()
+        self._config_mtime = self._get_config_mtime()
 
         # Inicializar idioma guardado antes de crear cualquier texto de UI
         load_language(self.config.get("language", "es"))
@@ -282,6 +303,37 @@ class ReminderApp:
         self.status_lbl.config(fg=color)
         logger.info("Status: %s", message)
 
+    def _get_config_mtime(self):
+        """Devuelve la fecha de modificación de config.json o None si no existe."""
+        try:
+            return os.path.getmtime(get_config_path())
+        except OSError:
+            return None
+
+    def _sync_recipients_from_disk_if_needed(self) -> None:
+        """Recarga destinatarios desde config.json si el archivo cambió externamente."""
+        current_mtime = self._get_config_mtime()
+        if current_mtime is None or current_mtime == self._config_mtime:
+            return
+
+        disk_config = load_config()
+        disk_recipients = _normalize_recipients(
+            disk_config.get("destinatarios", [])
+        )
+        current_recipients = _normalize_recipients(self.listbox_dest.get(0, tk.END))
+
+        self._config_mtime = current_mtime
+
+        if disk_recipients == current_recipients:
+            return
+
+        self.listbox_dest.delete(0, tk.END)
+        for email in disk_recipients:
+            self.listbox_dest.insert(tk.END, email)
+
+        self.config["destinatarios"] = disk_recipients
+        self._set_status(t("status_config_reloaded"), "gray")
+
     def _get_delay_secs(self) -> int:
         """Parsea el campo de delay; devuelve 60 si el valor no es numérico."""
         try:
@@ -379,7 +431,7 @@ class ReminderApp:
     def _save_config(self) -> None:
         """Persiste el estado actual de la UI en config.json."""
         config = {
-            "destinatarios":    list(self.listbox_dest.get(0, tk.END)),
+            "destinatarios":    _normalize_recipients(self.listbox_dest.get(0, tk.END)),
             "asunto":           self.entry_subject.get().strip(),
             "cuerpo":           self.text_body.get("1.0", tk.END).strip(),
             "auto_close":       self.auto_close_var.get(),
@@ -391,6 +443,7 @@ class ReminderApp:
         try:
             save_config(config)
             self.config = config
+            self._config_mtime = self._get_config_mtime()
             self._set_status(t("status_config_saved"), "green")
         except Exception as exc:
             self._set_status(t("status_config_error", error=str(exc)), "red")
@@ -407,8 +460,10 @@ class ReminderApp:
         if self._sending:
             return
 
+        self._sync_recipients_from_disk_if_needed()
+
         # Recopilar y validar datos de la UI antes de lanzar el hilo
-        recipients = [e.strip() for e in self.listbox_dest.get(0, tk.END) if e.strip()]
+        recipients = _normalize_recipients(self.listbox_dest.get(0, tk.END))
         if not recipients:
             self._set_status(t("status_no_recipients"), "red")
             return

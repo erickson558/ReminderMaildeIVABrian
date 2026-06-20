@@ -83,6 +83,8 @@ src/
 | `language` | `string` | Código de idioma ("es"/"en") |
 | `selected_account` | `string` | Última cuenta de envío |
 
+- Si `config.json` cambia externamente mientras la app está abierta, los destinatarios se recargan automáticamente antes del siguiente envío.
+
 ---
 
 ## 5. Reglas de calidad
@@ -127,4 +129,5 @@ El .exe resultante:
 
 | Fecha | Cambio |
 |---|---|
+| 2026-06-20 | Fix de destinatarios: la app ahora recarga `config.json` antes de enviar si el archivo cambió externamente y normaliza correos duplicados o con espacios. |
 | 2026-06-19 | Refactor completo: separación frontend/backend, fix Hotmail (SMTP), i18n, threading, botón donación, SDD, agents/skills |
